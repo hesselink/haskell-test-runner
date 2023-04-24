@@ -19,6 +19,7 @@ for test_dir in tests/*; do
     test_dir_path=$(realpath "${test_dir}")
     results_file_path="${test_dir_path}/results.json"
     expected_results_file_path="${test_dir_path}/expected_results.json"
+    stack_root=$(stack path --stack-root)
 
     bin/run.sh "${test_dir_name}" "${test_dir_path}" "${test_dir_path}"
 
@@ -29,7 +30,7 @@ for test_dir in tests/*; do
       -e 's/Completed [0-9]+ action\(s\).\\n//' \
       -e "s~${test_dir_path}~/solution~g" \
       -e 's/--builddir[^ ]+ //' \
-      -e 's/\/opt\/test-runner\/.stack\/setup-exe-cache[^ ]+ //' \
+      -e "s~${stack_root}/[^ ]+ ~~g" \
       "${results_file_path}"
 
     echo "${test_dir_name}: comparing results.json to expected_results.json"
